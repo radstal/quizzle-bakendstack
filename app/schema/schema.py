@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+
+from pydantic import BaseModel, validator
+
 from typing import Optional,List
 from datetime import datetime
 
@@ -18,9 +20,9 @@ class QUIZ(BaseModel):
     created_at: datetime = None #auto update creation time
     last_modified: datetime = None #auto update update time
 
-    @pydantic.validator('created_at', pre=True, always=True)
+    @validator('created_at', pre=True, always=True)
     def default_ts_created(cls, v):
         return v or datetime.utcnow()
-    @pydantic.validator('last_modified', pre=True, always=True)
+    @validator('last_modified', pre=True, always=True)
     def default_ts_modified(cls, v, *, values, **kwargs):
         return v or values['created_at']
