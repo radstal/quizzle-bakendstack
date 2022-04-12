@@ -16,7 +16,7 @@ class QUESTION(BaseModel):
 
 class QUIZ(BaseModel):
     author: str
-    question: List[QUESTION]
+    questions: List[QUESTION]
     created_at: datetime = None #auto update creation time
     last_modified: datetime = None #auto update update time
 

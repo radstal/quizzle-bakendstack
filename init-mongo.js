@@ -1,5 +1,5 @@
 db.createUser({
-    user:"readonly",
+    user:"test",
     pwd:"password",
     roles: [{
         role:"readWrite",

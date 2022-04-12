@@ -24,11 +24,5 @@ services:
       - mongo-volume:/data/db
     # ports:
     #   - "27017-27019:27017-27019"
-  db_admin:
-    image: thinkcube/phpmoadmin
-    ports:
-      - "8080:80"
-    links:
-      - "mongo:db"
 volumes:
   mongo-volume:
