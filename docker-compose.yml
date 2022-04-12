@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   backend:
-    image: quizzle-backend:dev 
+    image: radstallion/quizzle-backend:dev 
     build:
       context: ./app
       dockerfile: ./docker/Dockerfile.dev #equivalant to {context}/{dockerfile}
