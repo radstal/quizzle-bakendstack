@@ -13,10 +13,12 @@ async def createQuiz(quiz: QUIZ):
 
 @router.get("/",response_model=QUIZES) #READBULK
 async def listQuiz():
-    quizes = [json.loads(QUIZ.parse_obj(x).json()) for x in QUIZ_COL.find().limit(5)]
-    return {"quizes": quizes}
+    quizes = [(QUIZ.parse_obj(x)) for x in QUIZ_COL.find().limit(5)]
+    ret = QUIZES.parse_obj({"quizes": quizes})
+    print(ret)
+    return ret
 
-@router.get("/{id}") #READONE
+@router.get("/{id}",response_model=QUIZ) #READONE
 async def listQuiz(id):
 
     quiz = QUIZ_COL.find_one({"_id":ObjectId(id)})
