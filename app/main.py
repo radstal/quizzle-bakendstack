@@ -4,8 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from connections import QUIZ_COL
 from schema.schema import QUIZ
-from routers import quiz,user
-from starlette.middleware.sessions import SessionMiddleware
+from routers import quiz
+# from starlette.middleware.sessions import SessionMiddleware
 
 # login block
 
@@ -24,10 +24,10 @@ middleware = [
 app = FastAPI(middleware=middleware)
 
 origins = ["*"]
-app.add_middleware(
-    SessionMiddleware, 
-    secret_key=user.SECRET_STRING
-    )
+# app.add_middleware(
+#     SessionMiddleware, 
+#     secret_key=user.SECRET_STRING
+#     )
 
 app.include_router(
     quiz.router,
@@ -44,22 +44,6 @@ app.include_router(
 @app.get("/")
 async def helloWorld():
     return {"message": "Hello World"}
-
-
-# quiz CRUD
-# @app.post("/quiz/create") #CREATE
-# async def createQuiz(quiz: QUIZ):
-#     return {"message": "created"}
-
-# @app.get("/quiz/") #READBULK
-# async def listQuiz():
-#     quizes = [json.loads(QUIZ.parse_obj(x).json()) for x in QUIZ_COL.find().limit(5)]
-#     return {"quizes": quizes}
-
-# @app.get("/quiz/{id}") #READONE
-# async def listQuiz(id):
-#     quiz = QUIZ_COL.find_one({"_id":id}).json()
-#     return {"id": id,"quiz":quiz}
 
 @app.get("/func/populate")
 async def populateDB():
