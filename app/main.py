@@ -1,44 +1,69 @@
 from fastapi import FastAPI
+from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 
 from connections import QUIZ_COL
 from schema.schema import QUIZ
+from routers import quiz,user
+from starlette.middleware.sessions import SessionMiddleware
+
+# login block
 
 
-import json 
-app = FastAPI()
+# app
+
+middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=['*'],
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*']
+    )
+]
+app = FastAPI(middleware=middleware)
 
 origins = ["*"]
-
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    SessionMiddleware, 
+    secret_key=user.SECRET_STRING
+    )
+
+app.include_router(
+    quiz.router,
+    tags=["quiz"],
+    prefix="/quiz",
+    )
+# app.include_router(
+#     user.router,
+#     tags=["user"],
+#     prefix="/",
+#     )
+
+
 @app.get("/")
 async def helloWorld():
     return {"message": "Hello World"}
 
 
 # quiz CRUD
-@app.post("/quiz/create") #CREATE
-async def createQuiz(quiz: QUIZ):
-    return {"message": "created"}
+# @app.post("/quiz/create") #CREATE
+# async def createQuiz(quiz: QUIZ):
+#     return {"message": "created"}
 
-@app.get("/quiz/") #READBULK
-async def listQuiz():
-    quizes = [json.loads(QUIZ.parse_obj(x).json()) for x in QUIZ_COL.find().limit(5)]
-    return {"quizes": quizes}
+# @app.get("/quiz/") #READBULK
+# async def listQuiz():
+#     quizes = [json.loads(QUIZ.parse_obj(x).json()) for x in QUIZ_COL.find().limit(5)]
+#     return {"quizes": quizes}
 
-@app.get("/quiz/{id}") #READONE
-async def listQuiz(id):
-    quiz = QUIZ_COL.find_one({"_id":id}).json()
-    return {"id": id,"quiz":quiz}
+# @app.get("/quiz/{id}") #READONE
+# async def listQuiz(id):
+#     quiz = QUIZ_COL.find_one({"_id":id}).json()
+#     return {"id": id,"quiz":quiz}
 
 @app.get("/func/populate")
 async def populateDB():
+
     test_data = {
         "author": "populate",
         "questions": [
@@ -104,3 +129,4 @@ async def populateDB():
         error_message = str(e) #send error message if fail
     
     return {"created_id": str(post_id),"msg":error_message}
+

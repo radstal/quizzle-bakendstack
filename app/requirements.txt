@@ -1,1 +1,6 @@
 pymongo
+python-jose[cryptography]
+passlib[bcrypt]
+fastapi-login
+python-multipart
+authlib
