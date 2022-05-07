@@ -9,7 +9,13 @@ router = APIRouter()
 # quiz CRUD
 @router.post("/create") #CREATE
 async def createQuiz(quiz: QUIZ):
-    return {"message": "created"}
+    try:
+        # quiz_obj = QUIZ.parse_obj(quiz) # parse with pydantic to check for dtype mismatch
+        post_id = str(QUIZ_COL.insert_one(quiz.dict()).inserted_id) # insert to database
+    except Exception as e:
+        error_message = str(e) #send error message if fail
+    
+    return {"created_id": str(post_id),"msg":error_message}
 
 @router.get("/",response_model=QUIZES) #READBULK
 async def listQuiz():
