@@ -1,8 +1,22 @@
 from fastapi import FastAPI
-from schema.schema import QUIZ
+from fastapi.middleware.cors import CORSMiddleware
+
 from connections import QUIZ_COL
+from schema.schema import QUIZ
+
+
 import json 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/")
 async def helloWorld():
     return {"message": "Hello World"}
