@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,HTTPException
 from connections import QUIZ_COL
 from schema.schema import QUIZ,QUIZES,QUIZ_CREATE
 import json 
@@ -31,5 +31,9 @@ async def listQuiz(skip: int = 0, limit: int = 10):
 @router.get("/{id}",response_model=QUIZ) #READONE
 async def listQuiz(id):
 
-    quiz = QUIZ_COL.find_one({"_id":ObjectId(id)})
+    try:
+        quiz = QUIZ_COL.find_one({"_id":ObjectId(id)})
+    except Exception as e:
+        raise HTTPException(status_code=406, detail=str(e))
+
     return QUIZ.parse_obj(quiz)
