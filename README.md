@@ -40,3 +40,10 @@ docker-compose pull
 docker-compose build
 docker-compose push
 ~~~
+
+## discussions
+
+1. Do we need to do the add choice and delete choice options?
+2. What do they really care about?
+3. Can we find example?
+4. What is the wow factor?
