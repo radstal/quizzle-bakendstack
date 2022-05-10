@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from connections import QUIZ_COL
-from schema.schema import QUIZ,QUIZES
+from schema.schema import QUIZ,QUIZES,QUIZ_CREATE
 import json 
 from bson import ObjectId
 
@@ -8,9 +8,9 @@ router = APIRouter()
 
 # quiz CRUD
 @router.post("/create") #CREATE
-async def createQuiz(quiz: QUIZ):
+async def createQuiz(quiz: QUIZ_CREATE):
+    error_message = ""
     try:
-        # quiz_obj = QUIZ.parse_obj(quiz) # parse with pydantic to check for dtype mismatch
         post_id = str(QUIZ_COL.insert_one(quiz.dict()).inserted_id) # insert to database
     except Exception as e:
         error_message = str(e) #send error message if fail
@@ -18,8 +18,12 @@ async def createQuiz(quiz: QUIZ):
     return {"created_id": str(post_id),"msg":error_message}
 
 @router.get("/",response_model=QUIZES) #READBULK
-async def listQuiz():
-    quizes = [(QUIZ.parse_obj(x)) for x in QUIZ_COL.find().limit(5)]
+async def listQuiz(skip: int = 0, limit: int = 10):
+    quiz_obj = QUIZ_COL.find().limit(
+        int((skip+1)*limit)
+        ) #skip limit -> can be improve with get nth id and then get next limit
+    
+    quizes = [(QUIZ.parse_obj(x)) for x in quiz_obj][-limit:]
     ret = QUIZES.parse_obj({"quizes": quizes})
     print(ret)
     return ret

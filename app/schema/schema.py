@@ -30,8 +30,7 @@ class QUESTION(BaseModel):
     time: int = 60 # seconds
     multipleanswer: bool = False
 
-class QUIZ(BaseModel):
-    id: PyObjectId = PydanticField(default_factory=PyObjectId, alias="_id")
+class QUIZ_CREATE(BaseModel):
     author: str
     questions: List[QUESTION]
     created_at: datetime = None #auto update creation time
@@ -47,6 +46,8 @@ class QUIZ(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True #required for the _id 
         json_encoders = {ObjectId: str}
+class QUIZ(QUIZ_CREATE):
+    id: Optional[PyObjectId] = PydanticField(default_factory=PyObjectId, alias="_id")
 
 class QUIZES(BaseModel):
     quizes: List[QUIZ]
