@@ -2,16 +2,30 @@
 
 ## RUN
 
-### Build and Run
+### Run with attached terminal
 
 ~~~ bash
-docker-compose up --build
+docker-compose pull
+docker-compose up 
 ~~~
 
-### build run headless mode
+### Run headless mode
 
 ~~~ bash
-docker-compose up --build -d
+docker-compose pull
+docker-compose up -d
+~~~
+
+## Kill and Delete everything in localstorage **volume** *(eg. stored mongo database)*
+
+~~~ bash
+docker-compose down -v
+~~~
+
+## devlopment mode
+
+~~~ bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ~~~
 
 ## Pull from Internet Repo
